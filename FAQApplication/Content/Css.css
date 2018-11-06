@@ -1,0 +1,109 @@
+﻿
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    height: 100%;
+}
+
+    .topnav a {
+        float: left;
+        color: silver;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        
+    }
+
+  .topnav h2 {
+        float: right;
+        color: silver;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 16px;
+  }   
+
+ .topnav a:hover {
+    background-color: #ddd;        
+    color: black;        
+ }
+
+    .topnav a.active {
+        background-color: #132226;
+       
+        color: white;
+    }                
+
+#FAQdiv {
+   
+    height: 100%;
+}
+
+.faqTable {
+    margin-top: 2%;
+    
+    height: 100%;
+    font-family: Verdana;
+    color: silver;
+    margin-left: 1px;
+    background-color: cadetblue;
+    
+}
+
+.faqAnswers {
+    width: 100%;
+    display: none;
+    background-color: #132226;
+    border-bottom: 1px solid black;
+   
+}
+
+.faqQuestion{
+    background-color: darkslateblue;
+    
+}
+
+.toggleButton {
+    text-align: center;
+}
+
+#buttonId {
+    height: 100%;
+    width: 10%;
+    
+}
+
+.showAnswers {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+#tableHeader{
+    text-align: center;
+    border-bottom: 1px solid black;
+    width: 100%;
+    
+}
+
+.form-control{
+  width: 30%;
+ 
+}
+
+#formDiv{
+    padding-top: 2%;
+}
+
+#submitButton{
+   margin-top: 1%;
+
+}
