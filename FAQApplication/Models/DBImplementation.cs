@@ -28,24 +28,6 @@ namespace FAQApplication.Models
             }
         }
 
-
-     /*   public List<FAQDomain> GetFAQAnswers(int FaqId)
-        {
-            DatabaseContext db = new DatabaseContext();
-            try
-            {
-                List<FAQDomain> allFAQAnswers = db.FAQ.Where(e => e.Id == FaqId).Select(k => new FAQDomain()
-                {
-                    Answer = k.Answer
-                }).ToList();
-                return allFAQAnswers;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }*/
-
         public List<UserQuestionsDomain> GetAllUserQuestions()
         {
             DatabaseContext db = new DatabaseContext();
@@ -53,9 +35,10 @@ namespace FAQApplication.Models
             {
                 List<UserQuestionsDomain> allUserQuestions = db.UserQuestions.Select(k => new UserQuestionsDomain()
                 {
+                    Id = k.Id,
                     Question = k.Question,
                     Rating = k.Rating
-                }).ToList();
+                }).OrderByDescending(o => o.Rating).ToList();
                 return allUserQuestions;
             }
             catch (Exception ex)
@@ -67,28 +50,9 @@ namespace FAQApplication.Models
 
         public bool postQuestion(UserQuestionsDomain question)
         {
-            DatabaseContext db = new DatabaseContext();
-            try
-            {
-                var newQuestion = new UserQuestions()
-                {
-                    Question = question.Question,
-                    Rating = question.Rating
-                };
-                db.UserQuestions.Add(newQuestion);
-                db.SaveChanges();
-                return true;
-            }
-            catch(Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public bool postQuestionUser(UserQuestionsDomain question)
-        {
             var newQuestion = new UserQuestions()
             {
+                Id = question.Id,
                 Question = question.Question,
                 Rating = question.Rating
             };
@@ -105,6 +69,20 @@ namespace FAQApplication.Models
                 }
         }
 
-
+        public bool changeRating(int id, int rating)
+        {
+            DatabaseContext db = new DatabaseContext();
+            UserQuestions changedQuestion = db.UserQuestions.Find(id);
+            try
+            {
+                changedQuestion.Rating  = rating;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

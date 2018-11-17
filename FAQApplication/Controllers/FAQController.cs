@@ -20,11 +20,11 @@ namespace FAQApplication.Controllers
             return faqList;
         }
 
-     /*   public List<FAQDomain> Get(int id)
+        public bool Post(UserQuestions changed)
         {
-            List<FAQDomain> answerList = impl.GetFAQAnswers();
-            return answerList;
-        }*/
+           return impl.changeRating(changed.Id, changed.Rating);
+        }
+        
 
     }
 }

@@ -98,7 +98,8 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Css.css" />
+    <Content Include="Content\FAQCss.css" />
+    <Content Include="Content\UserCss.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\arrowdown.png" />
     <Content Include="Images\arrowup.png" />

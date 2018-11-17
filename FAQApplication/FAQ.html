@@ -5,8 +5,59 @@
     <title>FAQ</title>
     <script src="Scripts/jquery-3.3.1.min.js"></script>
     <link href="Content/bootstrap.css" rel="stylesheet" />
-    <link rel="stylesheet" href="Content/Css.css">
+    <link rel="stylesheet" href="Content/FAQCss.css">
     <script src="Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetAllFAQ();
+        });
+
+        function GetAllFAQ() {
+            $.ajax({
+                url: '/api/FAQ',
+                type: 'GET',
+                success: function (data) {
+                    showAll(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+       
+        $(function () {
+            $(document).on("click", ".toggleButton", function () {
+
+                var id = $(this).attr('data-type');
+
+
+                if ($(".AnswerRow." + id).is(":hidden")) {
+                    $('.showAnswers.' + id).attr('src', '../Images/arrowup.png');
+                    $('.AnswerRow.' + id).show();
+
+                }
+                else {
+
+                    $('.AnswerRow.' + id).hide();
+                    $('.showAnswers.' + id).attr('src', '../Images/arrowdown.png');
+                }
+
+            });
+        });
+
+
+        function showAll(faq) {
+            var string = "<div class='col-md-8 faqTable'><div id='tableHeader'>Frequently Asked Questions</div>";
+            $.each(faq, function (i, faq) {
+                string += "<div class='QuestionAndAnswer " + faq.Id + " col-md-12'><div class='QuestionRow " + faq.Id + " row'><div class='QuestionValue " + faq.Id + " col-md-11 column'>" + faq.Question + "</div><div class='QuestionButton " + faq.Id + " col-md-1 column' data-type='" + faq.Id + "'><input type='image' src='../Images/arrowdown.png' data-type='" + faq.Id + "'  class='showAnswers " + faq.Id + " toggleButton' /></div></div>";
+                string += "<div class='AnswerRow " + faq.Id + " col-md-12 row'><div class='AnswerValue " + faq.Id + " col-md-10 column'><p>" + faq.Answer + "</p></div></div></div>"
+            });
+            string += "</div>";
+            $("#FAQdiv").html(string);
+        }
+
+    </script>
 </head>
 <body>
     <div class="topnav">
@@ -16,7 +67,7 @@
     </div>
 
 
-    <div id="FAQdiv" style="background"></div>
+    <div id="FAQdiv"></div>
 
 </body>
 </html>
@@ -27,106 +78,3 @@
 
 
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        GetAllFAQ();
-    });
-
-
-
-    function GetAllFAQ() {
-        $.ajax({
-            url: '/api/FAQ',
-            type: 'GET',
-            success: function (data) {
-                showAll(data);
-            },
-            error: function (x, y, z) {
-                alert(x + '\n' + y + '\n' + z);
-            }
-        });
-    }
-    function showAll(faq) {
-        var string = "<div class='col-md-8 faqTable'><div id='tableHeader'><div>Frequently Asked Questions</div></div>";
-        $.each(faq, function (i, faq) {
-            string += "<div class='faqQuestion " + faq.Id + "'><div class='col-md-10' id='faqQuestionsId'>" + faq.Question + "</div><div id='buttonId' class='col-md-2' style='background-color:red;'><input type='image' src='../Images/arrowdown.png' data-type='" + faq.Id + "'  class='showAnswers " + faq.Id + " toggleButton' /></div></div>";
-            string += "<div class='faqAnswers " + faq.Id + "'  ><div>" + faq.Answer + "</div><div id='emptyTd'></div></div>";
-        });
-        string += "</div>";
-        $("#FAQdiv").html(string);
-    }
-
-    $(function () {
-        $(document).on("click", ".toggleButton", function () {
-
-            var id = $(this).attr('data-type');
-           
-
-            if ($(".faqAnswers." + id).is(":hidden")) {
-                $('.showAnswers.' + id).attr('src', '../Images/arrowup.png');
-                $('.faqAnswers.' + id).show();
-            }
-            else {
-                
-                $('.faqAnswers.' + id).hide();
-                $('.showAnswers.' + id).attr('src', '../Images/arrowdown.png');
-            }
-
-        });
-    });
-
-
-    
-
-    //user questions 
-
-    $(function () {
-        $(document).on("click", "#userQuestionButton", function () {
-            addQuestion();
-        });
-    });
-
-
-
-    /* function getUserQuestionsList() {
-        $.ajax({
-            url: '/UserQuestions/getAllMovies',
-            type: 'GET',
-            dataType: 'json',
-            success: function (movies) {
-                var print = "";
-                for (var i in movies) {
-                    var genre2 = ((movies[i].genre2 != null) ? movies[i].genre2 : '');
-                    print += "<tr id='" + movies[i].id + "'><th scope='row'>" + movies[i].id + "</th><td>" + movies[i].title + "</td><td>" + movies[i].summary + "</td><td>" + movies[i].price + "</td><td>" + movies[i].imageURL + "</td><td>" + movies[i].genre + "<br>" + genre2 + "</td><td><button data-type='" + movies[i].id + "' type='button' class='editBtn btn btn-warning'>Edit</button></td><td><button data-type='" + movies[i].id + "' type='button' class='removeBtn btn btn-danger'>Remove</button></td></tr>"
-                }
-                $("#contentBody").html(print);
-                scrollToTop();
-
-            },
-            error: function (x, y, z) {
-                alert(x + '\n' + y + '\n' + z);
-            }
-
-        });
-    } */
-
-    function addQuestion() {
-        var question = {
-            Question: $('#userQuestion').val(),
-        };
-        $.ajax({
-            url: '/UserQuestions/Post',
-            type: 'POST',
-            data: question,
-            contentType: "application/json;charset=utf-8",
-            success: function (question) {
-                alert("it works");
-            },
-            error: function (x, y, z) {
-                alert(x + '\n' + y + '\n' + z);
-                alert("it didnt work");
-            }
-        });
-    }
-
-</script>

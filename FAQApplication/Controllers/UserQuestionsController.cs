@@ -15,13 +15,18 @@ namespace FAQApplication.Controllers
         //POST new question and return the whole list
         public List<UserQuestionsDomain> Post(UserQuestionsDomain question)
         {
-            bool userQuestion = impl.postQuestionUser(question);
-            return impl.GetAllUserQuestions();
+            if (ModelState.IsValid)
+            {
+                bool userQuestion = impl.postQuestion(question);
+                return impl.GetAllUserQuestions();
+            }
+            return null;
         }
 
         public List<UserQuestionsDomain> Get()
         {
-            return impl.GetAllUserQuestions();
+            List<UserQuestionsDomain> list = impl.GetAllUserQuestions();
+            return list;
         }
     }
 }

@@ -29,10 +29,8 @@ namespace FAQApplication.Models
             : base("name=SupportDatabase")
         {
             Database.CreateIfNotExists();
-
             Database.SetInitializer(new DBInit());
         }
-
         public DbSet<FAQ> FAQ { get; set; }
         public DbSet<UserQuestions> UserQuestions { get; set; }
         

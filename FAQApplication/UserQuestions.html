@@ -5,29 +5,14 @@
     <title>User Questions</title>
     <script src="Scripts/jquery-3.3.1.min.js"></script>
     <link href="Content/bootstrap.css" rel="stylesheet" />
-    <link rel="stylesheet" href="Content/Css.css">
+    <link rel="stylesheet" href="Content/UserCss.css">
     <script src="Scripts/jquery.unobtrusive-ajax.min.js"></script>
-</head>
-<body>
-    <div class="topnav">
-        <a href="FAQ.html">FAQ</a>
-        <a class="active" href="UserQuestions.html">Ask Us!</a>
-        <h2>CinemaCity Support</h2>
-    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetAllUserQuestions();
+        });
 
-    <div id="formDiv">
-        <form>
-            <h5 style="color: silver; font-family: Verdana;">Ask your question here</h5>
-            <textarea class="form-control" rows="3" id="inputBox"></textarea>
-            <button type="button" id="submitButton" class="btn btn-info">Submit</button>
-        </form>
-    </div>
-</body>
-</html>
-
-<script type="text/javascript">
-
-    $(function () {
+        $(function () {
             $("#submitButton").click(function () {
                 var question = {
                     Question: $("#inputBox").val(),
@@ -46,8 +31,108 @@
                     }
                 });
             })
-    });
+        });
+
+        function showAll(userquestion) {
+            var string = "<div class='col-md-8 UserTable'><div id='tableHeader'>Questions Asked By Users</div>";
+            $.each(userquestion, function (i, userquestion) {
+                string += "<div class='UserQuestionRow " + userquestion.Id + " row'><div class='UserQuestionValue " + userquestion.Id + " col-md-9'>" + userquestion.Question + "</div><div class='UserQuestionUpvote " + userquestion.Id + " col-md-1 column' data-type='" + userquestion.Id + "'><input type='image' src='../Images/arrowup.png' data-type='" + userquestion.Id + "'  class='Upvote " + userquestion.Id + "' /></div><div id='UserRating' class='col-md-1 column userRatings" + userquestion.Id + "'>" + userquestion.Rating + "</div><div class='UserQuestionDownvote " + userquestion.Id + " col-md-1 column' data-type='" + userquestion.Id + "'><input type='image' src='../Images/arrowdown.png' data-type='" + userquestion.Id + "'  class='Downvote " + userquestion.Id + "' /></div></div>";
+            });
+            string += "</div>";
+            $("#UserQuestionDiv").html(string);
+        }
+
+        function GetAllUserQuestions() {
+            $.ajax({
+                url: '/api/UserQuestions',
+                type: 'GET',
+                success: function (data) {
+                    showAll(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        $(function () {
+            $(document).on("click", ".Upvote", function () {
+                var id = $(this).attr('data-type');
+                var oldrating = $('.userRatings' + id).html();
+                var newrating = parseInt(oldrating);
+                newrating++;
+
+                var updatedQuestion = {
+                    Id: id,
+                    Question: $('.UserQuestionValue' + id).html(),
+                    Rating: newrating
+                }
+                $.ajax({
+                    url: '/api/FAQ',
+                    type: 'POST',
+                    data: JSON.stringify(updatedQuestion),
+                    contentType: "application/json;charset=utf-8",
+                    success: function () {
+                       
+                        GetAllUserQuestions();
+                    },
+                    error: function (x, y, z) {
+                        alert(x + '\n' + y + '\n' + z);
+                    }
+                });
+            });
+        });
+        
+        $(function () {
+            $(document).on("click", ".Downvote", function () {
+                var id = $(this).attr('data-type');
+                var oldrating = $('.userRatings' + id).html();
+                var newrating = parseInt(oldrating);
+                newrating--;
 
 
-</script>+
+                var updatedQuestion = {
+                    Id: id,
+                    Question: $('.UserQuestionValue' + id).html(),
+                    Rating: newrating
+                }
+                $.ajax({
+                    url: '/api/FAQ',
+                    type: 'POST',
+                    data: JSON.stringify(updatedQuestion),
+                    contentType: "application/json;charset=utf-8",
+                    success: function () {
+                        GetAllUserQuestions();
+                    },
+                    error: function (x, y, z) {
+                        alert(x + '\n' + y + '\n' + z);
+                    }
+                });
+            });
+        });
+
+        
+    </script>
+</head>
+<body>
+    <div class="topnav">
+        <a href="FAQ.html">FAQ</a>
+        <a class="active" href="UserQuestions.html">Ask Us!</a>
+        <h2>CinemaCity Support</h2>
+    </div>
+
+    <div id="formDiv">
+        <form>
+            <h4 style="color: black; font-family: Verdana;">Ask your question here</h4>
+            <textarea class="form-control" rows="3" id="inputBox"></textarea>
+            <p>The Question must be between 12 and 150 letters<br />Only ! and ? are allowed as special characters</p>
+            <button type="button" id="submitButton" class="btn btn-info">Submit</button>
+        </form>
+    </div>
+
+    <div id="UserQuestionDiv"></div>
+</body>
+</html>
+
+
 
